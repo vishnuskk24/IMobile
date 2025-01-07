@@ -1,5 +1,6 @@
 package com.infy.api;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -24,6 +25,7 @@ public class OtpAPI {
 
 	
 	private final OTPGenerator otpGenerator;
+//	@Autowired
     private final JavaMailSender javaMailSender;
 
     
@@ -40,15 +42,20 @@ public class OtpAPI {
 								    	    @Pattern(regexp = "^[\\w.]+@[\\w]+\\.[\\w]+$", message = "{userdto.email.invalid}")
 								    	    @RequestParam String email) {
     	
-        String otp = otpGenerator.generateOTP(email);
-        
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo(email);
-        message.setSubject("OTP for your application");
-        message.setText("Your OTP is: " + otp);
-        
-        javaMailSender.send(message);
-        
+        String otp = otpGenerator.generateAndStoreOTPForMail(email);
+//        javaMailSender.
+       try {
+    	   
+           SimpleMailMessage message = new SimpleMailMessage();
+           message.setTo(email);
+           message.setSubject("OTP for your application");
+           message.setText("Your OTP is: " + otp);
+           
+           javaMailSender.send(message);
+           
+	} catch (Exception e) {
+		System.out.println(e);
+	}
         return ResponseEntity.ok("OTP sent successfully.");
     }
     

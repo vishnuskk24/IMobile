@@ -111,7 +111,7 @@ public class AccountServiceImpl implements AccountService {
             		throw new InfyMeMobileException("Service.Account_Not_Belongs_To_This_User");
         }
        
-        if(!OTPGenerator.GenerateOTP()) throw new InfyMeMobileException("Service.Issue_in_OTP_Generation");
+//        if(!OTPGenerator.generateOTP()) throw new InfyMeMobileException("Service.Issue_in_OTP_Generation");
         
        // check account already linked or not
         

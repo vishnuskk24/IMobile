@@ -56,6 +56,7 @@ public class UserAPI {
         UserDTO userDTO = userService.getUserProfile(userId);
         return ResponseEntity.ok(userDTO);
     }
+	 
 	 @Operation
 	 @ApiResponses
     @GetMapping(value = "/all")
