@@ -22,6 +22,7 @@ import java.util.List;
 @RestController
 @Validated
 @RequestMapping(value = "users")
+@CrossOrigin(origins = "*") 
 public class UserAPI {
 
 	 @Autowired
