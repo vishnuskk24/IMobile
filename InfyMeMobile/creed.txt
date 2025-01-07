@@ -1,0 +1,30 @@
+MySQL
+
+MySQLx
+Service URI
+mysql://avnadmin:AVNS_68EcfDmVNnK2W4accbz@mysql-24d03bab-creepyguyfromsrilanka-ad0e.g.aivencloud.com:21280/imobile?ssl-mode=REQUIRED
+
+Database name
+defaultdb
+
+Host
+mysql-24d03bab-creepyguyfromsrilanka-ad0e.g.aivencloud.com
+
+Port
+21280
+
+User
+avnadmin
+
+Password
+AVNS_68EcfDmVNnK2W4accbz
+
+
+
+SSL mode
+REQUIRED
+
+CA certificate
+Show
+
+Metrics overview
