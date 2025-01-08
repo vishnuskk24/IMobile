@@ -67,8 +67,8 @@ public class UserServiceImpl implements UserService {
 	        Optional<Users> userOptional = userRepository.findByUserId(userId);
 	        if (userOptional.isPresent()) {
 	            Users Users = userOptional.get();
-//	            return new UserDTO(Users); // Convert Users entity to UserDTO and return
-	            return null;
+	            return new UserDTO(Users); // Convert Users entity to UserDTO and return
+	            // return null;
 	        } else {
 	            throw new InfyMeMobileException("Users_ID_not_found");
 	        }
