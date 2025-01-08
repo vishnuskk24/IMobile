@@ -45,7 +45,7 @@ public class UserServiceImpl implements UserService {
 	    }
 
 	    @Override
-	    public boolean loginUser(LoginDTO loginDTO) throws InfyMeMobileException {
+	    public String loginUser(LoginDTO loginDTO) throws InfyMeMobileException {
 	        // Find the Users by mobile number
 	    	System.out.println(loginDTO + "  service line 50" + Thread.currentThread().getStackTrace()[2].getLineNumber());
 	        Optional<Users> userOptional = userRepository.findByMobileNumber(loginDTO.getMobileNumber());
@@ -54,7 +54,7 @@ public class UserServiceImpl implements UserService {
 	            // Compare passwords
 	            if (Users.getPassword().equals(loginDTO.getPassword())) {
 	            	System.out.println("User logi success ful login service");
-	                return true; // Authentication successful
+	                return "Service.User_Login_Success"; // Authentication successful
 	            }
 	        }
 	        // Authentication failed

@@ -3,6 +3,7 @@ package com.infy.api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -28,6 +29,8 @@ public class UserAPI {
 
 	 @Autowired
     private  UserService userService;
+	 @Autowired
+	 Environment environment;
 
    
 	 private static final Logger logger = LoggerFactory.getLogger(UserAPI.class);
@@ -45,15 +48,18 @@ public class UserAPI {
 	 @Operation
 	@ApiResponses
     @PostMapping(value =  "/login")
-    public ResponseEntity<Boolean> loginUser( @RequestBody LoginDTO loginDTO) throws InfyMeMobileException {
+    public ResponseEntity<String> loginUser( @RequestBody LoginDTO loginDTO) throws InfyMeMobileException {
+		 
 		 
     	System.out.println("line 43 api class login method");
-        boolean loggedIn = userService.loginUser(loginDTO);
-        return ResponseEntity.ok(loggedIn);
+        String message = userService.loginUser(loginDTO);
+        
+        
+        return ResponseEntity.ok(environment.getProperty(message));
     }
 	 @Operation
 	@ApiResponses
-    @GetMapping(value = "/{userId}")
+    @GetMapping(value = "/getProfile/{userId}")
     public ResponseEntity<UserDTO> getUserProfile(@PathVariable String userId) throws InfyMeMobileException {
         UserDTO userDTO = userService.getUserProfile(userId);
         return new ResponseEntity<>(userDTO, HttpStatus.OK);

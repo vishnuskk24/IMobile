@@ -8,7 +8,7 @@ import com.infy.exception.InfyMeMobileException;
 public interface UserService {
 
 	 String createUser(UserDTO userDTO) throws InfyMeMobileException;
-	    boolean loginUser(LoginDTO loginDTO) throws InfyMeMobileException;
+	    String loginUser(LoginDTO loginDTO) throws InfyMeMobileException;
 	    UserDTO getUserProfile(String userId) throws InfyMeMobileException;
 	    List<UserDTO> showAllUsers() throws InfyMeMobileException;
 }
