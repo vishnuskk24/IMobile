@@ -70,6 +70,10 @@ public class UserServiceImpl implements UserService {
 <<<<<<< HEAD
 //	            return new UserDTO(Users); // Convert Users entity to UserDTO and return
 	            return new UserDTO(Users);
+=======
+	            return new UserDTO(Users); // Convert Users entity to UserDTO and return
+	            // return null;
+>>>>>>> d6049d02a2ddb7231170149befa9d1f63d9baad2
 	        } else {
 	            throw new InfyMeMobileException("Users_ID_not_found");
 	        }
