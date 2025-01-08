@@ -22,7 +22,7 @@ public class UserDTO {
 //	@JsonProperty( "userId")
 	@NotNull(message = "{userdto.userId.null}")
 	@NotBlank(message = "{userdto.userId.blank}")
-    @Pattern(regexp = "^U.*", message = "{userdto.userId.invalid}")
+//    @Pattern(regexp = "^U.*", message = "{userdto.userId.invalid}")
     private String userId;
 
 //    @JsonProperty( "accountHolderName")
@@ -33,7 +33,7 @@ public class UserDTO {
     
 //    @JsonProperty( "gender")
 	@NotNull(message = "{userdto.gender.null}")
-    @Pattern(regexp = "^(Male|Female)$", message = "{userdto.gender.invalid}")
+//    @Pattern(regexp = "^(Male|Female)$", message = "{userdto.gender.invalid}")
     private Gender gender;
 
 //    @JsonProperty( "dateOfBirth")
@@ -43,13 +43,12 @@ public class UserDTO {
  
 //    @JsonProperty( "password")
     @NotNull(message = "{userdto.password.null}")
-    @Size(min = 5, max = 10, message = "{userdto.password.invalid.size}")
-    @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]+$", message = "{userdto.password.invalid}")
+    @Size(min = 5, max = 30, message = "{userdto.password.invalid.size}")
     private String password;
     
 //    @JsonProperty( "email")
     @NotNull(message = "{userdto.email.null}")
-    @Pattern(regexp = "^[\\w.]+@[\\w]+\\.[\\w]+$", message = "{userdto.email.invalid}")
+    @Email(message = "{userdto.email.invalid}")
     private String email;
     
 //    @JsonProperty( "communicationAddress")
@@ -59,7 +58,7 @@ public class UserDTO {
    
     @JsonProperty( "PAN")
     @NotBlank(message ="{userdto.PAN.null}")
-    @Pattern(regexp = "^[A-Z]{5}\\d{4}[A-Z]$", message = "{userdto.PAN.invalid}")
+//    @Pattern(regexp = "^[A-Z]{5}\\d{4}[A-Z]$", message = "{userdto.PAN.invalid}")
     private String PAN;
 	
     UserDTO(){

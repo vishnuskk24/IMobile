@@ -84,6 +84,12 @@ public class Accounts {
 	public void setUser(Users user) {
 		this.user = user;
 	}
+	@Override
+	public String toString() {
+		return "Accounts [accountNumber=" + accountNumber + ", bankName=" + bankName + ", balance=" + balance
+				+ ", accountType=" + accountType + ", ifscCode=" + ifscCode + ", openingDate=" + openingDate + ", user="
+				+ user + "]";
+	}
 	public Accounts(AccountsDTO accountDTO) {
 //        this.accountNumber = accountDTO.getAccountNumber();
         this.bankName = accountDTO.getBankName();

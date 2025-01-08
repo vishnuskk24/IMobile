@@ -1,4 +1,6 @@
 package com.infy.util;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.ObjectError;
@@ -19,6 +21,8 @@ import java.time.LocalDateTime;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+	@Autowired
+	Environment environment;
     @ExceptionHandler(ConstraintViolationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<ErrorInfo> handleConstraintViolationException(ConstraintViolationException ex) {
@@ -33,7 +37,7 @@ ErrorInfo error =  new ErrorInfo();
     		else errormsg+=o.getMessage();
     		
     	}
-    
+    	error.setErrorMessage(errormsg);
     	return new ResponseEntity<>(error,HttpStatus.BAD_REQUEST);
     }
 
@@ -52,14 +56,15 @@ ErrorInfo error =  new ErrorInfo();
     		else errormsg+=o.getDefaultMessage();
     		
     	}
-    
+    	error.setErrorMessage(errormsg);
+//    System.out.println(errormsg);
     	return new ResponseEntity<>(error,HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(InfyMeMobileException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ResponseEntity<ErrorInfo> handleInfyMeMobileException(InfyMeMobileException ex) {
-        ErrorInfo errorInfo = new ErrorInfo(ex.getMessage(), HttpStatus.BAD_REQUEST.value(), LocalDateTime.now());
+        ErrorInfo errorInfo = new ErrorInfo(environment.getProperty(ex.getMessage()), HttpStatus.BAD_REQUEST.value(), LocalDateTime.now());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorInfo);
     }
 

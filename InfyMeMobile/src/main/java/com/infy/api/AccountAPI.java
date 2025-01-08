@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,7 +23,7 @@ import com.infy.exception.InfyMeMobileException;
 import com.infy.service.AccountService;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
+//import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
@@ -41,6 +42,7 @@ public class AccountAPI {
     @ApiResponses
     @PostMapping
     public ResponseEntity<String> createAccount(@Valid @RequestBody AccountsDTO accountDTO) throws InfyMeMobileException {
+    	System.out.println(accountDTO.toString());
         accountService.createAccount(accountDTO);
         return ResponseEntity.ok("Account created successfully");
     }

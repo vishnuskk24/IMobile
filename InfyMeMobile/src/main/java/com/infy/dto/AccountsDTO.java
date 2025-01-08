@@ -64,6 +64,11 @@ public class AccountsDTO {
 		public void setUserDTO(UserDTO userDTO) {
 			this.userDTO = userDTO;
 		}
+		@Override
+		public String toString() {
+			return "AccountsDTO [bankName=" + bankName + ", balance=" + balance + ", accountType=" + accountType
+					+ ", ifscCode=" + ifscCode + ", openingDate=" + openingDate + ", userDTO=" + userDTO + "]";
+		}
 
 	    // Constructors, getters, and setters
 	

@@ -44,11 +44,16 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public String createAccount(AccountsDTO accountDTO) throws InfyMeMobileException {
+    	
+    	Users user = userRepository.findByMobileNumber(accountDTO.getUserDTO().getMobileNumber()).orElseThrow(()->new InfyMeMobileException("Service.User.not.found"));
     	List<Accounts> accs =  accountRepository.findByBankNameAndAccountType(accountDTO.getBankName(),accountDTO.getAccountType());
     	if(accs!=null&& !accs.isEmpty() && accs.size()>0) {
     		throw new InfyMeMobileException("Service.Account_Already_Exist_In_Same_Bank_And_AccountType");
     	}
+    	
         Accounts account = new Accounts(accountDTO);
+        account.setUser(user);
+        System.out.println(account.toString());
         Accounts savedAccount = accountRepository.save(account);
         return String.valueOf(savedAccount.getAccountNumber());
     }
