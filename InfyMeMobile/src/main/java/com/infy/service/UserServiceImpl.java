@@ -53,6 +53,7 @@ public class UserServiceImpl implements UserService {
 	            Users Users = userOptional.get();
 	            // Compare passwords
 	            if (Users.getPassword().equals(loginDTO.getPassword())) {
+	            	System.out.println("User logi success ful login service");
 	                return true; // Authentication successful
 	            }
 	        }
