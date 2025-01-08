@@ -1,13 +1,13 @@
 package com.infy.exception;
 
-public class InfyMeMobileException extends Exception {
+public class IMobileException extends Exception {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public InfyMeMobileException(String string) {
+	public IMobileException(String string) {
 		super(string);
 		// TODO Auto-generated constructor stub
 	}

@@ -8,7 +8,7 @@ import jakarta.persistence.*;
 public class DigitalBanking {
 		@Id
 		@GeneratedValue(strategy = GenerationType.IDENTITY)
-		private String digitalBankingId;
+		private Integer digitalBankingId;
 	    
 	    private String accountType;
 	    @ManyToOne(cascade = CascadeType.ALL)
@@ -21,11 +21,11 @@ public class DigitalBanking {
 
 		
 
-		public String getDigitalBankingId() {
+		public Integer getDigitalBankingId() {
 			return digitalBankingId;
 		}
 
-		public void setDigitalBankingId(String digitalBankingId) {
+		public void setDigitalBankingId(Integer digitalBankingId) {
 			this.digitalBankingId = digitalBankingId;
 		}
 
@@ -51,6 +51,12 @@ public class DigitalBanking {
 
 		public void setAccounts(Accounts accountNumber) {
 			this.account = accountNumber;
+		}
+
+		@Override
+		public String toString() {
+			return "DigitalBanking [digitalBankingId=" + digitalBankingId + ", accountType=" + accountType + ", user="
+					+ user + ", account=" + account + "]";
 		}
 	    
 	    

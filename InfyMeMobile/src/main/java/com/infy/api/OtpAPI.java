@@ -1,6 +1,7 @@
 package com.infy.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -11,11 +12,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.infy.exception.InfyMeMobileException;
-import com.infy.util.OTPGenerator;
+import com.infy.exception.IMobileException;
+import com.infy.service.UserService;
+import com.infy.util.OTPGeneratorService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 
@@ -23,15 +26,19 @@ import jakarta.validation.constraints.Pattern;
 @CrossOrigin(origins = "*") 
 public class OtpAPI {
 
+	@Autowired
+	Environment environment;
+	@Autowired
+	UserService userService;
+	private final OTPGeneratorService otpGeneratorService;
 	
-	private final OTPGenerator otpGenerator;
 //	@Autowired
-    private final JavaMailSender javaMailSender;
+//    private final JavaMailSender javaMailSender;
 
     
-    public OtpAPI(OTPGenerator otpGenerator, JavaMailSender javaMailSender) {
-        this.otpGenerator = otpGenerator;
-        this.javaMailSender = javaMailSender;
+    public OtpAPI(OTPGeneratorService otpGenerator) {
+        this.otpGeneratorService = otpGenerator;
+//        this.javaMailSender = javaMailSender;
     }
     
     // OTP sender to the specfic mail
@@ -40,30 +47,19 @@ public class OtpAPI {
     @PostMapping("/send-otp")
     public ResponseEntity<String> sendOTP( @NotNull(message = "{userdto.email.null}")
 								    	    @Pattern(regexp = "^[\\w.]+@[\\w]+\\.[\\w]+$", message = "{userdto.email.invalid}")
-								    	    @RequestParam String email) {
+								    	    @RequestParam String email) throws IMobileException {
     	
-        String otp = otpGenerator.generateAndStoreOTPForMail(email);
-//        javaMailSender.
-       try {
-    	   
-           SimpleMailMessage message = new SimpleMailMessage();
-           message.setTo(email);
-           message.setSubject("OTP for your application");
-           message.setText("Your OTP is: " + otp);
-           
-           javaMailSender.send(message);
-           
-	} catch (Exception e) {
-		System.out.println(e);
-	}
-        return ResponseEntity.ok("OTP sent successfully.");
+    	
+      String s  =userService.sendOTPByMail(email);
+   
+        return ResponseEntity.ok(environment.getProperty(s));
     }
     
-    @GetMapping(value = "/validate-otp/{email}/{otp}")
-    public ResponseEntity<String> validateOTP(@PathVariable String email,@PathVariable String otp) throws InfyMeMobileException{
+    @GetMapping(value = "/validate-otp/{email}/{otp}/{password}")
+    public ResponseEntity<String> validateOTP(@PathVariable@Email(message = "{api.forget.password.email.invalid}") String email,@PathVariable String otp,@PathVariable @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$",message = "{api.forgetpassword.invalid}") String password) throws IMobileException{
+    	String s =userService.validateOTPByMail(email, otp, password);
     	
-    	otpGenerator.validateOTP(otp , email);
     	
-    	 return ResponseEntity.ok("OTP validated successfully.");
+    	return ResponseEntity.ok(environment.getProperty(s));
     }
 }

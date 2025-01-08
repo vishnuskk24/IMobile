@@ -1,6 +1,8 @@
 
 
-
+DROP DATABASE IF EXISTS defaultdb;
+create database defaultdb;
+use defaultdb;
 CREATE TABLE users (
     mobile_number BIGINT PRIMARY KEY,
     user_id VARCHAR(255) UNIQUE NOT NULL,
@@ -31,13 +33,13 @@ VALUES (5678901234, 'user005', 'Olivia Davis', 'Female', '1995-07-22', 'olivia12
 
 
 CREATE TABLE accounts (
-    account_number BIGINT PRIMARY KEY,
+    account_number BIGINT PRIMARY KEY auto_increment,
     bank_name VARCHAR(255) NOT NULL,
     balance DOUBLE NOT NULL,
     account_type VARCHAR(100) NOT NULL,
     ifsc_code VARCHAR(20) NOT NULL,
     opening_date DATE NOT NULL,
-    mobile_number BIGINT NOT NULL,
+    mobile_number BIGINT not NULL,
     FOREIGN KEY (mobile_number) REFERENCES users(mobile_number)
 );
 
@@ -56,8 +58,8 @@ VALUES (10000004, 'Citi Bank', 4800.00, 'Checking', 'CITIUS33', '2017-03-10', 45
 INSERT INTO accounts (account_number, bank_name, balance, account_type, ifsc_code, opening_date, mobile_number) 
 VALUES (10000005, 'HSBC', 6100.75, 'Savings', 'HSBCUS33', '2021-07-22', 5678901234);
 
-CREATE TABLE digitalbanking (
-    digital_banking_id VARCHAR(255) PRIMARY KEY,
+CREATE TABLE digital_banking (
+    digital_banking_id Integer PRIMARY KEY auto_Increment,
     mobile_number BIGINT NOT NULL,
     account_number BIGINT NOT NULL,
     account_type VARCHAR(100) NOT NULL,
@@ -65,24 +67,24 @@ CREATE TABLE digitalbanking (
     FOREIGN KEY (account_number) REFERENCES accounts(account_number)
 );
 
-INSERT INTO digitalbanking (digital_banking_id, mobile_number, account_number, account_type) 
-VALUES ('wallet001', 1234567890, 10000001, 'Savings');
+INSERT INTO digital_banking (digital_banking_id, mobile_number, account_number, account_type) 
+VALUES (00001, 1234567890, 10000001, 'Savings');
 
-INSERT INTO digitalbanking (digital_banking_id, mobile_number, account_number, account_type) 
-VALUES ('wallet002', 2345678901, 10000002, 'Checking');
+INSERT INTO digital_banking (digital_banking_id, mobile_number, account_number, account_type) 
+VALUES (00002, 2345678901, 10000002, 'Checking');
 
-INSERT INTO digitalbanking (digital_banking_id, mobile_number, account_number, account_type) 
-VALUES ('wallet003', 3456789012, 10000003, 'Savings');
+INSERT INTO digital_banking (digital_banking_id, mobile_number, account_number, account_type) 
+VALUES (00003, 3456789012, 10000003, 'Savings');
 
-INSERT INTO digitalbanking (digital_banking_id, mobile_number, account_number, account_type) 
-VALUES ('wallet004', 4567890123, 10000004, 'Checking');
+INSERT INTO digital_banking (digital_banking_id, mobile_number, account_number, account_type) 
+VALUES (00004, 4567890123, 10000004, 'Checking');
 
-INSERT INTO digitalbanking (digital_banking_id, mobile_number, account_number, account_type) 
-VALUES ('wallet005', 5678901234, 10000005, 'Savings');
+INSERT INTO digital_banking (digital_banking_id, mobile_number, account_number, account_type) 
+VALUES (00005, 5678901234, 10000005, 'Savings');
 
 
 CREATE TABLE transactions (
-    transaction_id INT PRIMARY KEY,
+    transaction_id INT PRIMARY KEY auto_increment,
     mode_of_transaction VARCHAR(255) NOT NULL,
     paid_to BIGINT NOT NULL,
     receiver_account_number BIGINT NOT NULL,

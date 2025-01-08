@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import com.infy.exception.InfyMeMobileException;
+import com.infy.exception.IMobileException;
 
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
@@ -61,9 +61,10 @@ ErrorInfo error =  new ErrorInfo();
     	return new ResponseEntity<>(error,HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(InfyMeMobileException.class)
+    @ExceptionHandler(IMobileException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ResponseEntity<ErrorInfo> handleInfyMeMobileException(InfyMeMobileException ex) {
+    public ResponseEntity<ErrorInfo> handleInfyMeMobileException(IMobileException ex) {
+    	System.out.println(ex.getMessage());
         ErrorInfo errorInfo = new ErrorInfo(environment.getProperty(ex.getMessage()), HttpStatus.BAD_REQUEST.value(), LocalDateTime.now());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorInfo);
     }

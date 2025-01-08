@@ -14,26 +14,34 @@ public class TransactionDTO {
 
 	
 	private Integer transactionId;
-	@NotNull(message = "{tansactiondto.modeOfTransaction.null}")
-	@NotBlank(message = "{tansactiondto.modeOfTransaction.null}")
+	
+	@NotNull(message = "{transactiondto.modeOfTransaction.null}")
+	@NotBlank(message = "{transactiondto.modeOfTransaction.null}")
     private String modeOfTransaction;
-	@NotNull(message = "{tansactiondto.amount.null}")
-	@Min(value = 1 , message = "{tansactiondto.amount.invalid}")
+	
+	
+	@NotNull(message = "{transactiondto.amount.null}")
+	@Min(value = 1 , message = "{transactiondto.amount.invalid}")
     private Double amount;
-	@NotNull(message = "{tansactiondto.transactionDateTime.null}")
-	@PastOrPresent(message = "{tansactiondto.transactionDateTime.invalid}")
+	
+	@NotNull(message = "{transactiondto.transactionDateTime.null}")
+	@PastOrPresent(message = "{transactiondto.transactionDateTime.invalid}")
     private LocalDate transactionDateTime;
 	
     private String remarks;
-    @NotNull(message = "{tansactiondto.receiver.null}")
+    @NotNull(message = "{transactiondto.receiver.null}")
     private UserDTO receiver;
-    @NotNull(message = "{tansactiondto.transactionDateTime.null}")
-    private BankAccountDTO senderAccount;
-    @NotNull(message = "{tansactiondto.sender.null}")
-    private UserDTO  sender;
-    @NotNull(message = "{tansactiondto.receiverAccount.null}")
+    
+    @NotNull(message = "{transactiondto.receiverAccount.null}")
     private BankAccountDTO receiverAccount;
 
+    @NotNull(message = "{transactiondto.senderAccount.null}")
+    private BankAccountDTO senderAccount;
+    
+    @NotNull(message = "{transactiondto.sender.null}")
+    private UserDTO  sender;
+    
+   
 	public Integer getTransactionId() {
 		return transactionId;
 	}
@@ -106,6 +114,9 @@ public class TransactionDTO {
 		this.receiverAccount = receiverAccount;
 	}
     
+	public TransactionDTO() {
+		// TODO Auto-generated constructor stub
+	}
 	 public TransactionDTO(Transactions transaction) {
 	        this.transactionId = transaction.getTransactionId();
 	        this.modeOfTransaction = transaction.getModeOfTransaction();

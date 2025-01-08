@@ -11,8 +11,9 @@ import org.springframework.transaction.annotation.Transactional;
 import com.infy.dto.LoginDTO;
 import com.infy.dto.UserDTO;
 import com.infy.entity.Users;
-import com.infy.exception.InfyMeMobileException;
+import com.infy.exception.IMobileException;
 import com.infy.repository.UserRepository;
+import com.infy.util.OTPGeneratorService;
 
 @Service
 @Transactional
@@ -21,19 +22,21 @@ public class UserServiceImpl implements UserService {
 	
 		@Autowired
 	  private  UserRepository userRepository;
+		@Autowired
+		OTPGeneratorService otpGeneratorService;
 
 	    public UserServiceImpl(UserRepository userRepository) {
 	        this.userRepository = userRepository;
 	    }
 
 	    @Override
-	    public String createUser(UserDTO userDTO) throws InfyMeMobileException {
+	    public String createUser(UserDTO userDTO) throws IMobileException {
 	        
 	            // Check if the Users already exists
 	    	System.out.println("service lie 33 -> " + userDTO.toString());
 	            Optional<Users> existingUser = userRepository.findByMobileNumber(userDTO.getMobileNumber());
 	            if (existingUser.isPresent()) {
-	                throw new InfyMeMobileException("Users already exists");
+	                throw new IMobileException("Service.User_Already_Registered_With_Mobile_Number");
 	            }
 	            
 	            // Save the new Users
@@ -45,7 +48,7 @@ public class UserServiceImpl implements UserService {
 	    }
 
 	    @Override
-	    public String loginUser(LoginDTO loginDTO) throws InfyMeMobileException {
+	    public String loginUser(LoginDTO loginDTO) throws IMobileException {
 	        // Find the Users by mobile number
 	    	System.out.println(loginDTO + "  service line 50" + Thread.currentThread().getStackTrace()[2].getLineNumber());
 	        Optional<Users> userOptional = userRepository.findByMobileNumber(loginDTO.getMobileNumber());
@@ -58,11 +61,11 @@ public class UserServiceImpl implements UserService {
 	            }
 	        }
 	        // Authentication failed
-	        throw new InfyMeMobileException("Authentication_failed");
+	        throw new IMobileException("Authentication_failed");
 	    }
 
 	    @Override
-	    public UserDTO getUserProfile(String userId) throws InfyMeMobileException {
+	    public UserDTO getUserProfile(String userId) throws IMobileException {
 	    	System.out.println("line 65 in service");
 	        Optional<Users> userOptional = userRepository.findByUserId(userId);
 	        if (userOptional.isPresent()) {
@@ -71,21 +74,47 @@ public class UserServiceImpl implements UserService {
 	            return new UserDTO(Users); // Convert Users entity to UserDTO and return
 
 	        } else {
-	            throw new InfyMeMobileException("Users_ID_not_found");
+	            throw new IMobileException("Users_ID_not_found");
 	        }
 	    }
 
 	    @Override
-	    public List<UserDTO> showAllUsers() throws InfyMeMobileException {
+	    public List<UserDTO> showAllUsers() throws IMobileException {
 	        List<Users> users = userRepository.findAll();
 	        if (users.isEmpty()) {
-	            throw new InfyMeMobileException("No_users_found");
+	            throw new IMobileException("No_users_found");
 	        }
 	        return users.stream()
 	                .map(x-> new UserDTO(x)) // Convert each Users entity to UserDTO
 	                .collect(Collectors.toList()); // Return the list of UserDTOs
 //	        return null;
 	    }
+
+		@Override
+		public void checkUser(String mail) throws IMobileException {
+			Optional<Users> optional = userRepository.findByEmail(mail);
+			optional.orElseThrow(()-> new IMobileException("Service.User_Mail_Not_Found"));
+			
+		}
+		@Override
+		public String sendOTPByMail(String mail) throws IMobileException {
+			
+			checkUser(mail);
+			return otpGeneratorService.generateAndStoreOTPForMail(mail);
+		}
+		@Override
+		public String validateOTPByMail(String mail,String OTP, String pasword) throws IMobileException {
+			String resp = "";
+			checkUser(mail);
+			if(otpGeneratorService.validateOTP(mail, OTP)) {
+				userRepository.findByEmail(mail).get().setPassword(pasword);
+				resp="Service.Passwod_Changed_Successfully";
+				
+			}else throw new IMobileException("Serice.OTP_Invalid");
+			return resp;
+		}
+		
+		
 
 		
 }

@@ -67,5 +67,7 @@ public class BankAccountDTO {
 		public void setUserDTO(UserDTO userDTO) {
 			this.userDTO = userDTO;
 		}
-	    
+	    public BankAccountDTO() {
+			// TODO Auto-generated constructor stub
+		}
 }

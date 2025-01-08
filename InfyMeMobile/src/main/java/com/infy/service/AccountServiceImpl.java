@@ -17,18 +17,18 @@ import com.infy.entity.Accounts;
 import com.infy.entity.DigitalBanking;
 import com.infy.entity.Transactions;
 import com.infy.entity.Users;
-import com.infy.exception.InfyMeMobileException;
+import com.infy.exception.IMobileException;
 import com.infy.repository.AccountRepository;
 import com.infy.repository.DigitalBankAccountRepository;
 import com.infy.repository.TransactionRepository;
 import com.infy.repository.UserRepository;
-import com.infy.util.OTPGenerator;
+import com.infy.util.OTPGeneratorService;
 
 @Service
 public class AccountServiceImpl implements AccountService {
 	
 	@Autowired
-	OTPGenerator generator;
+	OTPGeneratorService generator;
 
 	@Autowired
 	UserRepository userRepository;
@@ -43,12 +43,13 @@ public class AccountServiceImpl implements AccountService {
     private TransactionRepository transactionRepository;
 
     @Override
-    public String createAccount(AccountsDTO accountDTO) throws InfyMeMobileException {
+    public String createAccount(AccountsDTO accountDTO) throws IMobileException {
     	
-    	Users user = userRepository.findByMobileNumber(accountDTO.getUserDTO().getMobileNumber()).orElseThrow(()->new InfyMeMobileException("Service.User.not.found"));
+    	Users user = userRepository.findByMobileNumber(accountDTO.getUserDTO().getMobileNumber()).orElseThrow(()->new IMobileException("Service.User.not.found"));
     	List<Accounts> accs =  accountRepository.findByBankNameAndAccountType(accountDTO.getBankName(),accountDTO.getAccountType());
     	if(accs!=null&& !accs.isEmpty() && accs.size()>0) {
-    		throw new InfyMeMobileException("Service.Account_Already_Exist_In_Same_Bank_And_AccountType");
+    		System.out.println("throw  lin 51");
+    		throw new IMobileException("Service.Account_Already_Exist_In_Same_Bank_And_AccountType");
     	}
     	
         Accounts account = new Accounts(accountDTO);
@@ -59,14 +60,14 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public List<BankAccountDTO> listAccounts(Long mobileNo) throws InfyMeMobileException {
+    public List<BankAccountDTO> listAccounts(Long mobileNo) throws IMobileException {
     	Optional<Users>  optional = userRepository.findById(mobileNo);
     	
-    	optional.orElseThrow(()-> new InfyMeMobileException("Service.User.not.found"));
+    	optional.orElseThrow(()-> new IMobileException("Service.User.not.found"));
     	
     	List<Accounts> accounts = accountRepository.findByMobileNo(mobileNo);
        
-    	if(accounts==null || accounts.isEmpty() || accounts.size()==0) throw new InfyMeMobileException("Service.User_Have_No_Account");
+    	if(accounts==null || accounts.isEmpty() || accounts.size()==0) throw new IMobileException("Service.User_Have_No_Account");
     	
         return accounts.stream()
                        .map(x-> new BankAccountDTO(x))
@@ -74,25 +75,25 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public String linkAccount(Long mobileNo, Long accountNo) throws InfyMeMobileException {
+    public String linkAccount(Long mobileNo, Long accountNo) throws IMobileException {
     	
     	Optional<Users>  optional = userRepository.findById(mobileNo);
-    	Users u =optional.orElseThrow(()-> new InfyMeMobileException("Service.User.not.found"));
+    	Users u =optional.orElseThrow(()-> new IMobileException("Service.User.not.found"));
     	
     	
         
         Optional<Accounts> accountsOptional =accountRepository.findById(accountNo);
-         Accounts ac=accountsOptional.orElseThrow(()-> new InfyMeMobileException("Service.Account.not.found"));
+         Accounts ac=accountsOptional.orElseThrow(()-> new IMobileException("Service.Account.not.found"));
             	
         if(ac==null || ac.getUser()==null || !ac.getUser().getMobileNumber().equals(mobileNo) ) {
-            		throw new InfyMeMobileException("Service.Account_Not_Belongs_To_This_User");
+            		throw new IMobileException("Service.Account_Not_Belongs_To_This_User");
         }
        
         
        // check account already linked or not
         
         List<DigitalBanking> di =  digitalBankAccountRepository.findByMobileAndAccountNumber(mobileNo,accountNo);
-        if(di!=null && !di.isEmpty()&&di.size()>0) throw new InfyMeMobileException("Service.Account_Mobile_Already_Linked");
+        if(di!=null && !di.isEmpty()&&di.size()>0) throw new IMobileException("Service.Account_Mobile_Already_Linked");
         DigitalBanking digitalBankAccount = new DigitalBanking();
         
         digitalBankAccount.setAccountType(ac.getAccountType());
@@ -103,17 +104,17 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public String linkAccount(Long mobileNo, Long accountNo, Integer otp) throws InfyMeMobileException {
+    public String linkAccount(Long mobileNo, Long accountNo, Integer otp) throws IMobileException {
 
     	Optional<Users>  optional = userRepository.findById(mobileNo);
-    	Users u =optional.orElseThrow(()-> new InfyMeMobileException("Service.User.not.found"));
+    	Users u =optional.orElseThrow(()-> new IMobileException("Service.User.not.found"));
     	
         
         Optional<Accounts> accountsOptional =accountRepository.findById(accountNo);
-         Accounts ac=accountsOptional.orElseThrow(()-> new InfyMeMobileException("Service.Account.not.found"));
+         Accounts ac=accountsOptional.orElseThrow(()-> new IMobileException("Service.Account.not.found"));
             	
         if(ac==null || ac.getUser()==null || !ac.getUser().getMobileNumber().equals(mobileNo) ) {
-            		throw new InfyMeMobileException("Service.Account_Not_Belongs_To_This_User");
+            		throw new IMobileException("Service.Account_Not_Belongs_To_This_User");
         }
        
 //        if(!OTPGenerator.generateOTP()) throw new InfyMeMobileException("Service.Issue_in_OTP_Generation");
@@ -121,7 +122,7 @@ public class AccountServiceImpl implements AccountService {
        // check account already linked or not
         
         List<DigitalBanking> di =  digitalBankAccountRepository.findByMobileAndAccountNumber(mobileNo,accountNo);
-        if(di!=null && !di.isEmpty()&&di.size()>0) throw new InfyMeMobileException("Service.Account_Mobile_Already_Linked");
+        if(di!=null && !di.isEmpty()&&di.size()>0) throw new IMobileException("Service.Account_Mobile_Already_Linked");
         DigitalBanking digitalBankAccount = new DigitalBanking();
         
         digitalBankAccount.setAccountType(ac.getAccountType());
@@ -136,44 +137,47 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public Double checkBalance(Long mobileNo, Long accountNo) throws InfyMeMobileException {
+    public Double checkBalance(Long mobileNo, Long accountNo) throws IMobileException {
     	
     	Optional<Users>  optional = userRepository.findById(mobileNo);
-    	Users u =optional.orElseThrow(()-> new InfyMeMobileException("Service.User.not.found"));
+    	Users u =optional.orElseThrow(()-> new IMobileException("Service.User.not.found"));
     	
     	
         Optional<Accounts> accounts = accountRepository.findById(mobileNo);
         
         Optional<Accounts> accountsOptional =accountRepository.findById(accountNo);
-         Accounts ac=accountsOptional.orElseThrow(()-> new InfyMeMobileException("Service.Account.not.found"));
+         Accounts ac=accountsOptional.orElseThrow(()-> new IMobileException("Service.Account.not.found"));
             	
         List<DigitalBanking> digitalBankAccounts = digitalBankAccountRepository.findByMobileAndAccountNumber(mobileNo, accountNo);
         if (digitalBankAccounts == null || digitalBankAccounts.isEmpty() || digitalBankAccounts.size()<=0) {
-            throw new InfyMeMobileException("NO_ACCOUNT_IS_LINKED");
+        	
+            throw new IMobileException("NO_ACCOUNT_IS_LINKED");
         }
         boolean flag =  true;
         for(DigitalBanking d : digitalBankAccounts) {
-        	if( d!=null && d.getAccounts()!=null && d.getUser()!=null && d.getAccounts().getAccountNumber().equals(accountNo) && d.getAccounts().getUser().getUserId().equals(mobileNo)) {
+        	
+//        	System.out.println((d!=null) + " - "+( d.getAccounts()!=null)+ " - "+ (d.getUser()!=null ) +" - "+ (d.getAccounts().getAccountNumber().equals(accountNo))+ " - "+(d.getAccounts().getUser().getUserId().equals(mobileNo)));
+        	if( d!=null && d.getAccounts()!=null && d.getUser()!=null && d.getAccounts().getAccountNumber().equals(accountNo) && d.getAccounts().getUser().getMobileNumber().equals(mobileNo)) {
         		flag= false;
         		break;
         	}
         }
-        if(flag) throw new InfyMeMobileException("NO_ACCOUNT_IS_LINKED");
+        if(flag) { throw new IMobileException("NO_ACCOUNT_IS_LINKED");}
        return ac.getBalance();
     }
 
     @Override
     @Transactional
-    public String fundTransfer(TransactionDTO transactionDTO) throws InfyMeMobileException {
+    public String fundTransfer(TransactionDTO transactionDTO) throws IMobileException {
     	 Optional<Users>  senderOptional = userRepository.findById(transactionDTO.getSender().getMobileNumber());
-      	Users send =senderOptional.orElseThrow(()-> new InfyMeMobileException("Service.Sender.not.found"));
+      	Users send =senderOptional.orElseThrow(()-> new IMobileException("Service.Sender.not.found"));
       	
       	 Optional<Users>  reciverOptional = userRepository.findById(transactionDTO.getSender().getMobileNumber());
-       	Users recv =reciverOptional.orElseThrow(()-> new InfyMeMobileException("Service.Reciver.not.found"));
+       	Users recv =reciverOptional.orElseThrow(()-> new IMobileException("Service.Reciver.not.found"));
        	
 
-    	Accounts senderAccount = accountRepository.findById(transactionDTO.getSenderAccount().getAccountNumber()).orElseThrow(() -> new InfyMeMobileException("Service.Sender_Account_Not_Present"));
-    	 Accounts receiverAccount = accountRepository.findById(transactionDTO.getReceiverAccount().getAccountNumber()).orElseThrow(() -> new InfyMeMobileException("Service.Reciver_Account_Not_Present"));
+    	Accounts senderAccount = accountRepository.findById(transactionDTO.getSenderAccount().getAccountNumber()).orElseThrow(() -> new IMobileException("Service.Sender_Account_Not_Present"));
+    	 Accounts receiverAccount = accountRepository.findById(transactionDTO.getReceiverAccount().getAccountNumber()).orElseThrow(() -> new IMobileException("Service.Reciver_Account_Not_Present"));
     	 
     	
      	
@@ -183,17 +187,17 @@ public class AccountServiceImpl implements AccountService {
         List<DigitalBanking> receiverAccountLink = digitalBankAccountRepository.findByMobileAndAccountNumber(transactionDTO.getReceiver().getMobileNumber(), transactionDTO.getReceiverAccount().getAccountNumber());
 
         if (senderAccountLink == null || senderAccountLink.isEmpty() || senderAccountLink.size()<1 ) {
-            throw new InfyMeMobileException("NO_ACCOUNT_IS_LINKED_Sender");
+            throw new IMobileException("NO_ACCOUNT_IS_LINKED_Sender");
         }
         if (receiverAccountLink == null || receiverAccountLink.isEmpty() || receiverAccountLink.size()<1 ) {
-            throw new InfyMeMobileException("NO_ACCOUNT_IS_LINKED_Reciver");
+            throw new IMobileException("NO_ACCOUNT_IS_LINKED_Reciver");
         }
         
 //        Accounts senderAccount = accountRepository.findById(transactionDTO.getSenderAccount().getAccountNumber()).orElseThrow(() -> new InfyMeMobileException("Service.Sender_Not_Present"));
 //        Accounts receiverAccount = accountRepository.findById(transactionDTO.getReceiverAccount().getAccountNumber()).orElseThrow(() -> new InfyMeMobileException("Service.Reciver_Not_Present"));
 
         if (senderAccount.getBalance() < transactionDTO.getAmount()) {
-            throw new InfyMeMobileException("Service.INSUFFICIENT_FUNDS");
+            throw new IMobileException("Service.INSUFFICIENT_FUNDS");
         }
 
         senderAccount.setBalance(senderAccount.getBalance() - transactionDTO.getAmount());
@@ -220,10 +224,10 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public List<TransactionDTO> accountStatement(Long mobileNo) throws InfyMeMobileException {
+    public List<TransactionDTO> accountStatement(Long mobileNo) throws IMobileException {
         List<Transactions> transactions = transactionRepository.getAllTransaction(mobileNo);
         if (transactions.isEmpty()) {
-            throw new InfyMeMobileException("NO_ACTIVE_TRANSACTIONS");
+            throw new IMobileException("NO_ACTIVE_TRANSACTIONS");
         }
         
         return transactions.stream()

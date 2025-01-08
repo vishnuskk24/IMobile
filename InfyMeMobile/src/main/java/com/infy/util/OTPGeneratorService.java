@@ -13,42 +13,57 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.stereotype.Component;
 
-import com.infy.exception.InfyMeMobileException;
+import com.infy.exception.IMobileException;
 
 @Component
-@EnableCaching
-public class OTPGenerator {
 
-	private static final int OTP_LENGTH = 6;
-	private static final String DIGITS = "0123456789";
-	private static final SecureRandom random = new SecureRandom();
+public class OTPGeneratorService {
+	
+	@Autowired
+	CustomMailService customMailService;
+	@Autowired
+	CustomCacheManager cacheManager;
+	
+	@Autowired
+	CacheService cacheService;
 
+
+//	*
 	public boolean validateOTP(String email, String actualOTP) {
 
-		String storedOTP = getOTPForMail(email);
+		String storedOTP = cacheService.getOTP(email);
+		cacheManager.removeOtpInCache(email);
+		
+		System.out.println(storedOTP +" " + actualOTP);
 
 		return storedOTP.equals(actualOTP);
 
 	}
-
+//*
 	public String generateAndStoreOTPForMail(String mail) {
 
 		String otp = generateOTP();
 
-		storeOTPInCache(mail, otp);
-		return otp;
+		
+		cacheManager.storeOTPInCache(mail, otp);
+		customMailService.sendOTPInMail(mail, otp);
+		System.out.println(getCache(mail)+ "< --- otp from cache");
+		
+		return "OTP_Sent_Success";
 
 	}
 
-	public String getOTPForMail(String mail) {
+	public String getCache(String mail) {
 
-		String otp = getOtpInCache(mail);
+		cacheService.checkCache(mail);
 
-		removeOtpInCache(mail);
-		return otp;
+//		removeOtpInCache(mail);
+//		customMailService.sendOTPInMail(mail, otp);
+		return " ";
 
 	}
-
+	
+//*
 	public String generateOTP() {
 		Random rand = new Random();
 
@@ -56,29 +71,6 @@ public class OTPGenerator {
 
 		return otp + "";
 
-	}
-
-//     ===================caching methods
-
-	@Cacheable(value = "userOtpCache", key = "#email")
-	public String getOtpInCache(String email) {
-		// This will not execute if the key is found in the cache
-		return "OTP not available for email: " + email;
-	}
-
-	@CachePut(value = "userOtpCache", key = "#email")
-	public String storeOTPInCache(String email, String otp) {
-		return otp; // This value is stored in the cache
-	}
-
-	@CacheEvict(value = "userOtpCache", key = "#email")
-	public void removeOtpInCache(String email) {
-		System.out.println("Removed OTP for email: " + email);
-	}
-
-	@CacheEvict(value = "userOtpCache", allEntries = true)
-	public void clearAll() {
-		System.out.println("All cache entries cleared.");
 	}
 
 }

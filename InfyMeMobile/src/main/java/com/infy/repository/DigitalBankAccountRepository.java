@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import com.infy.entity.DigitalBanking;
 
-public interface DigitalBankAccountRepository extends JpaRepository<DigitalBanking, String> {
+public interface DigitalBankAccountRepository extends JpaRepository<DigitalBanking, Integer> {
 
 	@Query("Select d from DigitalBanking d where d.user.mobileNumber =?1 and d.account.accountNumber=?2")
 	List<DigitalBanking> findByMobileAndAccountNumber(Long mobileNo, Long accountNo);

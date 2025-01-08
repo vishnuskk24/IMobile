@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.infy.dto.LoginDTO;
 import com.infy.dto.UserDTO;
-import com.infy.exception.InfyMeMobileException;
+import com.infy.exception.IMobileException;
 import com.infy.service.UserService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -38,7 +38,7 @@ public class UserAPI {
 	 @Operation
 	 @ApiResponses
     @PostMapping(value = "/adduser")
-    public ResponseEntity<String> createUser(@Valid @RequestBody UserDTO userDTO) throws InfyMeMobileException {
+    public ResponseEntity<String> createUser(@Valid @RequestBody UserDTO userDTO) throws IMobileException {
     	System.out.println("line 34++++++++++++++++++" + userDTO);
 //    	 UserDTO userDTO=null;
     	System.out.println(userDTO +"++++++++++++++++++++++++++++++");
@@ -48,7 +48,7 @@ public class UserAPI {
 	 @Operation
 	@ApiResponses
     @PostMapping(value =  "/login")
-    public ResponseEntity<String> loginUser( @RequestBody LoginDTO loginDTO) throws InfyMeMobileException {
+    public ResponseEntity<String> loginUser( @RequestBody LoginDTO loginDTO) throws IMobileException {
 		 
 		 
     	System.out.println("line 43 api class login method");
@@ -60,7 +60,7 @@ public class UserAPI {
 	 @Operation
 	@ApiResponses
     @GetMapping(value = "/getProfile/{userId}")
-    public ResponseEntity<UserDTO> getUserProfile(@PathVariable String userId) throws InfyMeMobileException {
+    public ResponseEntity<UserDTO> getUserProfile(@PathVariable String userId) throws IMobileException {
         UserDTO userDTO = userService.getUserProfile(userId);
         return new ResponseEntity<>(userDTO, HttpStatus.OK);
     }
@@ -68,7 +68,7 @@ public class UserAPI {
 	 @Operation
 	 @ApiResponses
     @GetMapping(value = "/all")
-    public ResponseEntity<List<UserDTO>> showAllUsers() throws InfyMeMobileException {
+    public ResponseEntity<List<UserDTO>> showAllUsers() throws IMobileException {
         List<UserDTO> users = userService.showAllUsers();
         return ResponseEntity.ok(users);
     }

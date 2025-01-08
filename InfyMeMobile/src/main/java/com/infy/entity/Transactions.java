@@ -105,6 +105,14 @@ public class Transactions {
 	@ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "paid_from")
     private Users paidFrom;
+
+	@Override
+	public String toString() {
+		return "Transactions [transactionId=" + transactionId + ", modeOfTransaction=" + modeOfTransaction + ", amount="
+				+ amount + ", transactionDateTime=" + transactionDateTime + ", remarks=" + remarks
+				+ ", receiverAccount=" + receiverAccount + ", paidTo=" + paidTo + ", senderAccount=" + senderAccount
+				+ ", paidFrom=" + paidFrom + "]";
+	}
     
    
 

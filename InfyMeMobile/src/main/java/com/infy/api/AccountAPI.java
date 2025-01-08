@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.infy.dto.AccountsDTO;
 import com.infy.dto.BankAccountDTO;
 import com.infy.dto.TransactionDTO;
-import com.infy.exception.InfyMeMobileException;
+import com.infy.exception.IMobileException;
 import com.infy.service.AccountService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -41,10 +41,10 @@ public class AccountAPI {
     @Operation
     @ApiResponses
     @PostMapping
-    public ResponseEntity<String> createAccount(@Valid @RequestBody AccountsDTO accountDTO) throws InfyMeMobileException {
+    public ResponseEntity<String> createAccount(@Valid @RequestBody AccountsDTO accountDTO) throws IMobileException {
     	System.out.println(accountDTO.toString());
-        accountService.createAccount(accountDTO);
-        return ResponseEntity.ok("Account created successfully");
+       String accNo= accountService.createAccount(accountDTO);
+        return ResponseEntity.ok("Account created successfully with AccountNo "+accNo);
     }
     @Operation
     @ApiResponses
@@ -52,7 +52,7 @@ public class AccountAPI {
     public ResponseEntity<List<BankAccountDTO>> listAccounts(@NotNull(message = "{userdto.mobileNumber.null}")
 															@Min(value = 1000000000L ,message = "{userdto.mobilenumber.invalid}")
 															@Max(value = 9999999999L,message = "{userdto.mobilenumber.invalid}")
-    														@PathVariable Long mobileNo) throws InfyMeMobileException {
+    														@PathVariable Long mobileNo) throws IMobileException {
         List<BankAccountDTO> accounts = accountService.listAccounts(mobileNo);
         return ResponseEntity.ok(accounts);
     }
@@ -64,7 +64,7 @@ public class AccountAPI {
 											 @Max(value = 9999999999L,message = "{userdto.mobilenumber.invalid}")@PathVariable Long mobileNo, 
 											 @NotNull(message = "{userdto.mobileNumber.null}")
 											  @Min(value = 1 ,message = "{accountdto.accountNo.invalid}")
-											 @RequestParam Long accountNo) throws InfyMeMobileException {
+											 @RequestParam Long accountNo) throws IMobileException {
         accountService.linkAccount(mobileNo, accountNo);
         return ResponseEntity.ok("Account linked successfully");
     }
@@ -79,7 +79,7 @@ public class AccountAPI {
 											  @Min(value = 1 ,message = "{accountdto.accountNo.invalid}")
     										  @RequestParam Long accountNo, 
     										  @NotNull(message = "{userdto.otp.null}")
-    										  @RequestParam Integer otp) throws InfyMeMobileException {
+    										  @RequestParam Integer otp) throws IMobileException {
         accountService.linkAccount(mobileNo, accountNo, otp);
         return ResponseEntity.ok("Account linked with OTP successfully");
     }
@@ -92,14 +92,14 @@ public class AccountAPI {
 											
 											  @NotNull(message = "{userdto.mobileNumber.null}")
 											  @Min(value = 1 ,message = "{accountdto.accountNo.invalid}")
-											  @RequestParam Long accountNo) throws InfyMeMobileException {
+											  @RequestParam Long accountNo) throws IMobileException {
         Double balance = accountService.checkBalance(mobileNo, accountNo);
         return ResponseEntity.ok(balance);
     }
     @Operation
     @ApiResponses()
     @PutMapping("/fundtransfer")
-    public ResponseEntity<String> fundTransfer(@Valid @RequestBody TransactionDTO transactionDTO) throws InfyMeMobileException {
+    public ResponseEntity<String> fundTransfer(@Valid @RequestBody TransactionDTO transactionDTO) throws IMobileException {
         accountService.fundTransfer(transactionDTO);
         return ResponseEntity.ok("Fund transfer successful");
     }
@@ -108,7 +108,7 @@ public class AccountAPI {
     @GetMapping("/statement/{mobileNo}")
     public ResponseEntity<List<TransactionDTO>> accountStatement(@NotNull(message = "{userdto.mobileNumber.null}")
 																  @Min(value = 1000000000L ,message = "{userdto.mobilenumber.invalid}")
-																  @Max(value = 9999999999L,message = "{userdto.mobilenumber.invalid}")@PathVariable Long mobileNo) throws InfyMeMobileException {
+																  @Max(value = 9999999999L,message = "{userdto.mobilenumber.invalid}")@PathVariable Long mobileNo) throws IMobileException {
         List<TransactionDTO> statements = accountService.accountStatement(mobileNo);
         return ResponseEntity.ok(statements);
     }

@@ -5,22 +5,22 @@ import java.util.List;
 import com.infy.dto.AccountsDTO;
 import com.infy.dto.BankAccountDTO;
 import com.infy.dto.TransactionDTO;
-import com.infy.exception.InfyMeMobileException;
+import com.infy.exception.IMobileException;
 
 public interface AccountService {
 
-	String createAccount(AccountsDTO accountDTO)throws InfyMeMobileException;
+	String createAccount(AccountsDTO accountDTO)throws IMobileException;
 
-	List<BankAccountDTO> listAccounts(Long mobileNo) throws InfyMeMobileException;
+	List<BankAccountDTO> listAccounts(Long mobileNo) throws IMobileException;
 
-	String linkAccount(Long mobileNo, Long accountNo)throws InfyMeMobileException;
+	String linkAccount(Long mobileNo, Long accountNo)throws IMobileException;
 
-	String linkAccount(Long mobileNo, Long accountNo, Integer otp)throws InfyMeMobileException;
+	String linkAccount(Long mobileNo, Long accountNo, Integer otp)throws IMobileException;
 
-	Double checkBalance(Long mobileNo, Long accountNo) throws InfyMeMobileException;
+	Double checkBalance(Long mobileNo, Long accountNo) throws IMobileException;
 
-	List<TransactionDTO> accountStatement(Long mobileNo)  throws InfyMeMobileException;
+	List<TransactionDTO> accountStatement(Long mobileNo)  throws IMobileException;
 
-	String fundTransfer(TransactionDTO transactionDTO)throws InfyMeMobileException;
+	String fundTransfer(TransactionDTO transactionDTO)throws IMobileException;
 
 }
