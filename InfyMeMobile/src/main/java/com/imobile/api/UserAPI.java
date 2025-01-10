@@ -24,7 +24,7 @@ import java.util.List;
 @RestController
 @Validated
 @RequestMapping(value = "users")
-@CrossOrigin(origins = "*",allowPrivateNetwork = "*",value = "*") 
+@CrossOrigin(origins = "*",allowPrivateNetwork = "true") 
 public class UserAPI {
 
 	 @Autowired

@@ -33,7 +33,7 @@ import jakarta.validation.constraints.NotNull;
 @RestController
 @RequestMapping("/accounts")
 @Validated
-@CrossOrigin(origins = "*",allowPrivateNetwork = "true",value = "*")  
+@CrossOrigin(origins = "*",allowPrivateNetwork = "true")  
 public class AccountAPI {
 
     @Autowired

@@ -23,7 +23,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 
 @RestController
-@CrossOrigin(origins = "*",allowPrivateNetwork = "*",value = "*") 
+@CrossOrigin(origins = "*",allowPrivateNetwork = "true") 
 public class OtpAPI {
 
 	@Autowired
