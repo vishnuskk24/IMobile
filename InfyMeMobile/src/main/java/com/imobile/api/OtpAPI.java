@@ -23,7 +23,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 
 @RestController
-@CrossOrigin(origins =  {"https://imobile-production.up.railway.app/", "http://localhost:8765"},allowPrivateNetwork = "true") 
+//@CrossOrigin(origins =  {"https://imobile-production.up.railway.app/", "http://localhost:8765"},allowPrivateNetwork = "true") 
 public class OtpAPI {
 
 	@Autowired
