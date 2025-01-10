@@ -33,7 +33,7 @@ import jakarta.validation.constraints.NotNull;
 @RestController
 @RequestMapping("/accounts")
 @Validated
-@CrossOrigin(origins = "*",allowPrivateNetwork = "true")  
+@CrossOrigin(origins =  {"https://imobile-production.up.railway.app/", "http://localhost:8765"},allowPrivateNetwork = "true") 
 public class AccountAPI {
 
     @Autowired
